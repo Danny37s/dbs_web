@@ -9,9 +9,9 @@ const inter = Inter({ subsets: ["latin"] });
 
 export default function Home() {
   const router = useRouter()
-    useEffect(()=>{
-        router.push("/dataSample")
-    },[router])
+    // useEffect(()=>{
+    //     router.push("/dataSample")
+    // },[router])
   return (
     <>
       <Head>

@@ -33,9 +33,11 @@ const DataSample = () => {
 
   //handle function
   const handleInputSearch = (valueSearch: string) => {
+    
     setSearch(valueSearch);
   };
   const handleChangeSort = (value: E_sort) => {
+    console.log(value)
     setSort(value);
   };
   const handleButtonSearch = () => {

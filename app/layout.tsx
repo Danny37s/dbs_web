@@ -1,11 +1,10 @@
 /* eslint-disable react/jsx-no-undef */
 // app/layout.tsx
-"use client";
 import axiosClient from "@/api-client/axiosClient";
+import Providers from "@/app/Providers";
 import { CacheProvider } from "@chakra-ui/next-js";
 import { ChakraProvider } from "@chakra-ui/react";
 import useSWR, { SWRConfig } from "swr";
-
 export default function RootLayout({
   children,
 }: {
@@ -14,19 +13,10 @@ export default function RootLayout({
   return (
     <html lang="en">
       <head>
-        <title>GUI Data Sample</title>
+        <title>DashBoard</title>
       </head>
       <body>
-        <SWRConfig
-          value={{
-            fetcher: (url) => axiosClient.get(url),
-            shouldRetryOnError: false,
-          }}
-        >
-          <CacheProvider>
-            <ChakraProvider>{children}</ChakraProvider>
-          </CacheProvider>
-        </SWRConfig>
+        <Providers>{children}</Providers>
       </body>
     </html>
   );
