@@ -4,23 +4,28 @@ import { CacheProvider } from "@chakra-ui/next-js";
 import { ChakraProvider } from "@chakra-ui/react";
 import React, { FC, ReactNode } from "react";
 import { SWRConfig } from "swr";
+import { SessionProvider } from "next-auth/react";
+import Navbar from "@/components/ui/Navbar";
+import { QueryClient, QueryClientProvider } from "react-query";
 
 interface ProvidersProps {
   children: ReactNode;
 }
+const queryClient = new QueryClient();
 const Providers: FC<ProvidersProps> = ({ children }) => {
   return (
-    <SWRConfig
-      value={{
-        fetcher: (url) => axiosClient.get(url),
-        shouldRetryOnError: false,
-      }}
-    >
+    <QueryClientProvider client={queryClient}>
       <CacheProvider>
-        <ChakraProvider>{children}</ChakraProvider>
+        <ChakraProvider>
+          <SessionProvider
+          //  refetchInterval={5 * 60}
+          >
+            <Navbar></Navbar>
+            {children}
+          </SessionProvider>
+        </ChakraProvider>
       </CacheProvider>
-    </SWRConfig>
+    </QueryClientProvider>
   );
 };
-
 export default Providers;

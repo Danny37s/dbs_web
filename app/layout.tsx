@@ -1,23 +1,19 @@
 /* eslint-disable react/jsx-no-undef */
-// app/layout.tsx
-import axiosClient from "@/api-client/axiosClient";
 import Providers from "@/app/Providers";
-import { CacheProvider } from "@chakra-ui/next-js";
-import { ChakraProvider } from "@chakra-ui/react";
-import useSWR, { SWRConfig } from "swr";
-export default function RootLayout({
-  children,
-}: {
+import { SessionProvider } from "next-auth/react";
+
+export interface I_props {
   children: React.ReactNode;
-}) {
+}
+export default function RootLayout({ children}: I_props) {
   return (
     <html lang="en">
       <head>
         <title>DashBoard</title>
       </head>
       <body>
-        <Providers>{children}</Providers>
-      </body>
+           <Providers>{children}</Providers>
+       </body>
     </html>
   );
 }

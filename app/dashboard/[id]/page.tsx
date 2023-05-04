@@ -76,7 +76,7 @@ const DataItem = ({ params }: { params: { id: string } }) => {
             </Tr>
           </Thead>
           <Tbody>
-            {data?.data?.map((item: I_DataSampleItem, index: number) => (
+            {data?.map((item: I_DataSampleItem, index: number) => (
               <Tr key={index}>
                 <Td>{index + 1}</Td>
                 <Td cursor={"pointer"}>{item.name}</Td>
