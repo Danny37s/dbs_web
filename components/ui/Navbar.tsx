@@ -43,7 +43,7 @@ export default function Simple() {
   const { isOpen, onOpen, onClose } = useDisclosure();
 
   return (
-    <Box bg={useColorModeValue("gray.100", "gray.900")} px={4} >
+    <Box bg={useColorModeValue("gray.100", "gray.900")} px={4} className="" >
       <Flex h={16} alignItems={"center"} justifyContent={"space-between"}>
         <IconButton
           size={"md"}
@@ -53,7 +53,7 @@ export default function Simple() {
           onClick={isOpen ? onClose : onOpen}
         />
         <HStack spacing={8} alignItems={"center"}>
-          <Box>Logo</Box>
+          <Box className="text-primary">Logo</Box>
           <HStack as={"nav"} spacing={4} display={{ base: "none", md: "flex" }}>
             {/* {Links.map((link) => (
                 <NavLink key={link}>{link}</NavLink>

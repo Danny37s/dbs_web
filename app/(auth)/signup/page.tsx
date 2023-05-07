@@ -54,8 +54,8 @@ const SignUpPage: FC = () => {
         duration: 3000,
         isClosable: false,
       });
-      reset({username:"", password:""})
-    }else{
+      reset({ username: "", password: "" });
+    } else {
       toast({
         title: "Sign up",
         description: "Sign up successfully",
@@ -63,7 +63,7 @@ const SignUpPage: FC = () => {
         duration: 3000,
         isClosable: false,
       });
-      router.replace("/login")
+      router.replace("/login");
     }
   });
 
@@ -142,6 +142,10 @@ const SignUpPage: FC = () => {
                       type={showPassword ? "text" : "password"}
                       {...register("password", {
                         required: "This is required",
+                        minLength: {
+                          value: 6,
+                          message: "Minimum length should be 6",
+                        },
                       })}
                     />
                     <InputRightElement h={"full"}>

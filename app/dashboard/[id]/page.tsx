@@ -14,9 +14,7 @@ import {
   Tfoot,
   Center,
   Box,
-  IconButton,
-  Input,
-  Select,
+  Skeleton,
   useDisclosure,
   Button,
   Modal,
@@ -26,17 +24,23 @@ import {
   ModalCloseButton,
   ModalBody,
   ModalFooter,
+  Stack,
 } from "@chakra-ui/react";
-import useSWR from "swr";
+import * as v4 from "uuidv4";
 import { format } from "date-fns";
 import { I_DataSampleItem } from "@/models/dataSampleItem";
 import { ChartApp } from "./chart";
 import { BiArrowBack } from "react-icons/bi";
 import { useRouter } from "next/navigation";
+import { useQuery } from "react-query";
+import { dataSampleApi } from "@/api-client";
 const DataItem = ({ params }: { params: { id: string } }) => {
   const [dataChart, setDataChart] = useState<number[]>([]);
-  const url = `/data-sample/data/${params.id}`;
-  const { data, mutate, error, isValidating } = useSWR(url);
+
+  const { data, error, status, isLoading } = useQuery({
+    queryKey: ["data", params],
+    queryFn: () => dataSampleApi.getDataItem(params.id),
+  });
   const { isOpen, onOpen, onClose } = useDisclosure();
   const router = useRouter();
   //handle
@@ -63,40 +67,50 @@ const DataItem = ({ params }: { params: { id: string } }) => {
         </Button>
         <Heading>Data Sample Item</Heading>
       </Box>
-      <TableContainer className="w-2/3">
-        <Table size="lg" variant="simple" key={Math.random()}>
-          <Thead>
-            <Tr>
-              <Th className="">ID</Th>
-              <Th>Name</Th>
-              <Th>angle_id</Th>
-              <Th>date</Th>
-              <Th>status</Th>
-              <Th>Chart</Th>
-            </Tr>
-          </Thead>
-          <Tbody>
-            {data?.map((item: I_DataSampleItem, index: number) => (
-              <Tr key={index}>
-                <Td>{index + 1}</Td>
-                <Td cursor={"pointer"}>{item.name}</Td>
-                <Td textAlign={"center"}>{item.angle_id}</Td>
-                <Td>{format(new Date(item.date), "dd MMMM yyyy HH:mm:ss")}</Td>
-                <Td>{item.status}</Td>
-                <Td>
-                  <Button
-                    onClick={() => {
-                      handleShowChart(item.predict_result);
-                    }}
-                  >
-                    Show Chart
-                  </Button>
-                </Td>
+      {!isLoading ? (
+        <TableContainer className="w-full">
+          <Table size="md" variant="simple" key={Math.random()}>
+            <Thead>
+              <Tr>
+                <Th className="">ID</Th>
+                <Th>Name</Th>
+                <Th textAlign={"center"}>angle_id</Th>
+                <Th>date</Th>
+                <Th textAlign={"center"}>status</Th>
+                <Th>Chart</Th>
               </Tr>
-            ))}
-          </Tbody>
-        </Table>
-      </TableContainer>
+            </Thead>
+            <Tbody>
+              {data?.map((item: I_DataSampleItem, index: number) => (
+                <Tr key={index}>
+                  <Td>{index + 1}</Td>
+                  <Td cursor={"pointer"}>{item.name}</Td>
+                  <Td textAlign={"center"}>{item.angle_id}</Td>
+                  <Td>
+                    {format(new Date(item.date), "dd MMMM yyyy HH:mm:ss")}
+                  </Td>
+                  <Td textAlign={"center"}>{item.status}</Td>
+                  <Td>
+                    <Button
+                      onClick={() => {
+                        handleShowChart(item.predict_result);
+                      }}
+                    >
+                      Show Chart
+                    </Button>
+                  </Td>
+                </Tr>
+              ))}
+            </Tbody>
+          </Table>
+        </TableContainer>
+      ) : (
+        <Stack paddingTop={"20px"}>
+          <Skeleton key={v4.uuid()} height="40px" />
+          <Skeleton key={v4.uuid()} height="40px" />
+          <Skeleton key={v4.uuid()} height="40px" />
+        </Stack>
+      )}
 
       <Modal isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />

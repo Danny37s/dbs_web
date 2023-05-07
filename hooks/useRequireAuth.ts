@@ -14,7 +14,7 @@ export default function useRequireAuth(redirectUrl = "/login") {
     if (!session) {
       router.replace(redirectUrl);
     }
-  }, [session, status, router]);
+  }, [session, status, router, redirectUrl]);
 
   return session;
 }

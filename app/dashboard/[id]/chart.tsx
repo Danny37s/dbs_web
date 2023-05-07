@@ -25,7 +25,6 @@ ChartJS.register(
 
 
 export function ChartApp({ChartData}:any) {
-  console.log(ChartData)
   const labels = ChartData.map((value:number)=> value.toString());
   const data = {
     labels,

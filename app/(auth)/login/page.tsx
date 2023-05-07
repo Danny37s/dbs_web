@@ -1,3 +1,4 @@
+/* eslint-disable react/jsx-no-undef */
 "use client";
 import {
   Box,
@@ -16,6 +17,8 @@ import {
   Center,
   FormErrorMessage,
   useToast,
+  InputGroup,
+  InputRightElement,
 } from "@chakra-ui/react";
 import NextLink from "next/link";
 import React, { FC, useState } from "react";
@@ -27,6 +30,7 @@ import { I_Login } from "@/models/auth";
 import useRequireAuth from "@/hooks/useRequireAuth";
 import { useRouter } from "next/navigation";
 import { error } from "console";
+import { ViewIcon, ViewOffIcon } from "@chakra-ui/icons";
 const CFaUserAlt = chakra(FaUserAlt);
 const CFaLock = chakra(FaLock);
 
@@ -106,23 +110,34 @@ const LoginPage: FC = () => {
                   {errors.username && errors.username.message}
                 </FormErrorMessage>
               </FormControl>
-              <FormControl isInvalid={!!errors.password}>
-                <FormLabel htmlFor="password">Password</FormLabel>
-                <Input
-                  id="password"
-                  type={showPassword ? "text" : "password"}
-                  {...register("password", {
-                    required: "This is required",
-                    minLength: {
-                      value: 6,
-                      message: "Minimum length should be 6",
-                    },
-                  })}
-                />
-                <FormErrorMessage>
-                  {errors.password && errors.password?.message}
-                </FormErrorMessage>
-              </FormControl>
+              <FormControl id="password" isInvalid={!!errors.password}>
+                  <FormLabel>Password</FormLabel>
+                  <InputGroup>
+                    <Input
+                      type={showPassword ? "text" : "password"}
+                      {...register("password", {
+                        required: "This is required",
+                        minLength: {
+                          value: 6,
+                          message: "Minimum length should be 6",
+                        },
+                      })}
+                    />
+                    <InputRightElement h={"full"}>
+                      <Button
+                        variant={"ghost"}
+                        onClick={() =>
+                          handleShowClick()
+                        }
+                      >
+                        {showPassword ? <ViewIcon /> : <ViewOffIcon />}
+                      </Button>
+                    </InputRightElement>
+                  </InputGroup>
+                  <FormErrorMessage>
+                    {errors.password && errors.password.message}
+                  </FormErrorMessage>
+                </FormControl>
               <Stack spacing={10}>
                 <Stack
                   direction={{ base: "column", sm: "row" }}

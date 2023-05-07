@@ -8,7 +8,7 @@ import useRequireAuth from "@/hooks/useRequireAuth";
 const Layout = ({ children }: { children: ReactNode }) => {
   const session = useRequireAuth();
 
-  return session&&(<Box >{children}</Box>);
+  return session&&(<Box className="bg-white text-black" >{children}</Box>);
 };
 
 export default Layout;

@@ -3,8 +3,6 @@ import GoogleProvider from "next-auth/providers/google";
 import CredentialsProvider from "next-auth/providers/credentials";
 import axiosClient from "@/api-client/axiosClient";
 import { I_User } from "@/models";
-import cookie from "cookie";
-import { NextApiRequest, NextApiResponse } from "next";
 export const AuthOptions: NextAuthOptions = {
   providers: [
     // GoogleProvider({
@@ -19,7 +17,7 @@ export const AuthOptions: NextAuthOptions = {
       // e.g. domain, username, password, 2FA token, etc.
       // You can pass any HTML attribute to the <input> tag through the object.
       credentials: {
-        username: { label: "Username", type: "text", placeholder: "jsmith" },
+        username: { label: "Username", type: "text", placeholder: "Username" },
         password: { label: "Password", type: "password" },
       },
       async authorize(credentials, req) {
@@ -35,7 +33,7 @@ export const AuthOptions: NextAuthOptions = {
 
             // Set the JWT token as a cookie
             return { ...userData, id: userData.user_id };
-          } catch (error: any) {
+          } catch (error:any) {
             throw new Error(error.message);
           }
         } else {
@@ -64,7 +62,8 @@ export const AuthOptions: NextAuthOptions = {
   },
 
   pages: {
-    signIn: "/auth/login",
-    error: "/auth/login",
+    signIn: "/login",
+    error: "/login",
+    signOut:"/login",
   },
 };

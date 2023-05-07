@@ -1,3 +1,4 @@
+/* eslint-disable react/jsx-no-undef */
 "use client";
 import React, { useState } from "react";
 import {
@@ -10,15 +11,21 @@ import {
   Th,
   Tbody,
   Td,
-  Tfoot,
-  Center,
+  Text,
   Box,
   IconButton,
   Input,
+  InputGroup,
   Select,
   Spinner,
+  InputLeftElement,
+  Stack,
+  Skeleton,
+  Card,
+  CardBody
 } from "@chakra-ui/react";
 import { FiSearch } from "react-icons/fi";
+import { IoIosArrowBack, IoIosArrowForward } from "react-icons/io";
 import { dataSampleApi } from "@/api-client";
 import useSWR from "swr";
 import { E_sort, I_DataSample, I_PayloadDataSample } from "@/models";
@@ -26,57 +33,84 @@ import axios from "axios";
 import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
 import { useQuery } from "react-query";
-
+import useDebounce from "@/hooks/useDebounce";
+import { Dropdown, DropdownItem } from "@tremor/react";
+import * as v4 from "uuidv4";
 const DataSample = () => {
   const router = useRouter();
   const { data: session, status: sessionStatus } = useSession();
   const [sort, setSort] = useState<E_sort>("asc" as E_sort);
   const [search, setSearch] = useState("");
-  const [valueToSearch, setValueToSearch] = useState("");
-  const url = `/data-sample/data?search=${valueToSearch}&sort=${sort}`;
+  const debouncedValue = useDebounce<string>(search, 500);
+  const [pageLimit, setPageLimit] = useState("10");
+  const [pageIndex, setPageIndex] = useState("1");
   const { data, error, status } = useQuery({
-    queryKey:["getDataSample", valueToSearch, sort],
-    queryFn:()=> dataSampleApi.getListData(valueToSearch, sort)
+    queryKey: ["getDataSample", debouncedValue, sort, pageIndex, pageLimit],
+    queryFn: () =>
+      dataSampleApi.getListData(debouncedValue, sort, pageIndex, pageLimit),
+    keepPreviousData: true,
   });
   const [hydrated, setHydrated] = React.useState(false);
 
   React.useEffect(() => {
     setHydrated(true);
   }, []);
+  React.useEffect(() => {
+    setPageIndex("1");
+  }, [debouncedValue]);
 
   //handle function
   const handleInputSearch = (valueSearch: string) => {
-    console.log(valueSearch)
     setSearch(valueSearch);
   };
   const handleChangeSort = (value: E_sort) => {
     setSort(value);
   };
-  const handleButtonSearch = () => {
-    
-    setValueToSearch(search);
-  };
+
   const handleMoveToDetail = (id: string) => {
-    router.push(`dataSample/${id}`);
+    router.push(`dashboard/${id}`);
+  };
+
+  const handleChangePageLimit = (pageLimitValue: string) => {
+    setPageLimit(pageLimitValue);
+    setPageIndex("1");
+  };
+  const handleChangePageIndex = (pageIndexValue: string) => {
+    setPageIndex(pageIndexValue);
   };
 
   return hydrated ? (
-    <Box paddingX={"30px"}>
+    <Box paddingX={"30px"} className="bg-primary">
+      <Box display={"flex"} paddingY={"30px"} gap={"10px"}>
+        <Card>
+          <CardBody>
+            
+          </CardBody>
+        </Card>
+        <Card>
+          <CardBody>
+            <Text>
+              View a summary of all your customers over the last month.
+            </Text>
+          </CardBody>
+        </Card>
+      </Box>
       <Box marginBottom={"20px"}>
         <Heading>Data Sample</Heading>
       </Box>
-      <Box display={"flex"} gap={"8px"} onClick={() => handleButtonSearch()}>
-        <IconButton
-          colorScheme="blue"
-          aria-label="Search database"
-          icon={<FiSearch />}
-        />
-        <Input
-          placeholder="Search"
-          w={"50%"}
-          value={search}
-          onChange={(e) => handleInputSearch(e.target.value)}
-        />
+      <Box display={"flex"} gap={"8px"}>
+        <InputGroup>
+          <InputLeftElement>
+            <FiSearch />
+          </InputLeftElement>
+          <Input
+            placeholder="Search"
+            w={"50%"}
+            value={search}
+            onChange={(e) => handleInputSearch(e.target.value)}
+          />
+        </InputGroup>
+
         <Select
           placeholder="Select option"
           value={sort}
@@ -88,41 +122,88 @@ const DataSample = () => {
         </Select>
       </Box>
       {status === "loading" ? (
-        <Box
-          w={"full"}
-          display={"flex"}
-          marginTop={"14px"}
-          justifyContent={"center"}
-        >
-          <Spinner></Spinner>
-        </Box>
+        <Stack paddingTop={"20px"}>
+          {Array(Number(pageLimit))
+            .fill(null)
+            .map(() => (
+              <Skeleton key={v4.uuid()} height="40px" />
+            ))}
+        </Stack>
       ) : status === "error" ? (
         <></>
       ) : (
-        <TableContainer className="w-2/3">
-          <Table size="lg" variant="simple" key={Math.random()}>
-            <Thead>
-              <Tr>
-                <Th className="">ID</Th>
-                <Th>Name data</Th>
-              </Tr>
-            </Thead>
-
-            <Tbody>
-              {data?.map((item: I_DataSample, index: number) => (
-                <Tr key={index}>
-                  <Td>{index + 1}</Td>
-                  <Td
-                    onClick={() => handleMoveToDetail(item.id)}
-                    cursor={"pointer"}
-                  >
-                    {item.name_data}
-                  </Td>
+        <Box paddingBottom={"50px"}>
+          <TableContainer className="w-2/3 bg-primary">
+            <Table size="md" variant="simple" key={Math.random()}>
+              <Thead>
+                <Tr>
+                  <Th className="">ID</Th>
+                  <Th>Name data</Th>
                 </Tr>
-              ))}
-            </Tbody>
-          </Table>
-        </TableContainer>
+              </Thead>
+              <Tbody>
+                {data?.data.map((item: I_DataSample, index: number) => (
+                  <Tr key={index}>
+                    <Td>
+                      {Number(pageLimit) * (Number(pageIndex) - 1) + index + 1}
+                    </Td>
+                    <Td
+                      onClick={() => handleMoveToDetail(item.id)}
+                      cursor={"pointer"}
+                    >
+                      {item.name_data}
+                    </Td>
+                  </Tr>
+                ))}
+              </Tbody>
+            </Table>
+          </TableContainer>
+          <Box
+            w={"100%"}
+            display={"flex"}
+            justifyContent={"space-between"}
+            fontSize={"lg"}
+            marginTop={"30px"}
+          >
+            <Select
+              w={"150px"}
+              placeholder="No. of rows"
+              size={"sm"}
+              value={pageLimit}
+              onChange={(e) => handleChangePageLimit(e.target.value)}
+            >
+              <option value="10">No. of rows 10</option>
+              <option value="20">No. of rows 20</option>
+              <option value="50">No. of rows 50</option>
+            </Select>
+            <Box display={"flex"} gap={"6px"}>
+              <IconButton
+                variant="outline"
+                color="blue.500"
+                aria-label="Call Sage"
+                fontSize="20px"
+                isDisabled={pageIndex === "1"}
+                onClick={() =>
+                  handleChangePageIndex((parseInt(pageIndex) - 1).toString())
+                }
+              >
+                <IoIosArrowBack />
+              </IconButton>
+              <IconButton
+                variant="outline"
+                color="blue.500"
+                aria-label="Call Sage"
+                fontSize="20px"
+                isDisabled={data?.meta.last_page.toString() === pageIndex}
+                onClick={() =>
+                  handleChangePageIndex((parseInt(pageIndex) + 1).toString())
+                }
+              >
+                <IoIosArrowForward />
+              </IconButton>
+            </Box>
+          </Box>
+        </Box>
       )}
     </Box>
   ) : (
