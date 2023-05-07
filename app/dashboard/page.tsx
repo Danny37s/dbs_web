@@ -27,15 +27,14 @@ import {
 import { FiSearch } from "react-icons/fi";
 import { IoIosArrowBack, IoIosArrowForward } from "react-icons/io";
 import { dataSampleApi } from "@/api-client";
-import useSWR from "swr";
 import { E_sort, I_DataSample, I_PayloadDataSample } from "@/models";
-import axios from "axios";
 import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
 import { useQuery } from "react-query";
 import useDebounce from "@/hooks/useDebounce";
 import { Dropdown, DropdownItem } from "@tremor/react";
-import * as v4 from "uuidv4";
+import { v4 as uuidv4 } from 'uuid';
+import DashboardPieChart from "@/components/ui/DashboardPieChart";
 const DataSample = () => {
   const router = useRouter();
   const { data: session, status: sessionStatus } = useSession();
@@ -82,9 +81,9 @@ const DataSample = () => {
   return hydrated ? (
     <Box paddingX={"30px"} className="bg-primary">
       <Box display={"flex"} paddingY={"30px"} gap={"10px"}>
-        <Card>
+        <Card w={"50%"}>
           <CardBody>
-            
+            <Box><DashboardPieChart/></Box>
           </CardBody>
         </Card>
         <Card>
@@ -126,7 +125,7 @@ const DataSample = () => {
           {Array(Number(pageLimit))
             .fill(null)
             .map(() => (
-              <Skeleton key={v4.uuid()} height="40px" />
+              <Skeleton key={uuidv4()} height="40px" />
             ))}
         </Stack>
       ) : status === "error" ? (

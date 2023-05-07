@@ -26,7 +26,7 @@ import {
   ModalFooter,
   Stack,
 } from "@chakra-ui/react";
-import * as v4 from "uuidv4";
+import { v4 as uuidv4 } from 'uuid';
 import { format } from "date-fns";
 import { I_DataSampleItem } from "@/models/dataSampleItem";
 import { ChartApp } from "./chart";
@@ -106,9 +106,9 @@ const DataItem = ({ params }: { params: { id: string } }) => {
         </TableContainer>
       ) : (
         <Stack paddingTop={"20px"}>
-          <Skeleton key={v4.uuid()} height="40px" />
-          <Skeleton key={v4.uuid()} height="40px" />
-          <Skeleton key={v4.uuid()} height="40px" />
+          <Skeleton key={uuidv4()} height="40px" />
+          <Skeleton key={uuidv4()} height="40px" />
+          <Skeleton key={uuidv4()} height="40px" />
         </Stack>
       )}
 
