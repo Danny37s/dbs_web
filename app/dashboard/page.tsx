@@ -22,7 +22,7 @@ import {
   Stack,
   Skeleton,
   Card,
-  CardBody
+  CardBody,
 } from "@chakra-ui/react";
 import { FiSearch } from "react-icons/fi";
 import { IoIosArrowBack, IoIosArrowForward } from "react-icons/io";
@@ -33,11 +33,13 @@ import { useSession } from "next-auth/react";
 import { useQuery } from "react-query";
 import useDebounce from "@/hooks/useDebounce";
 import { Dropdown, DropdownItem } from "@tremor/react";
-import { v4 as uuidv4 } from 'uuid';
+import { v4 as uuidv4 } from "uuid";
 import DashboardPieChart from "@/components/ui/DashboardPieChart";
+import useRequireAuth from "@/hooks/useRequireAuth";
+import DashboardBarChart from "@/components/ui/DashboardBarChart";
 const DataSample = () => {
   const router = useRouter();
-  const { data: session, status: sessionStatus } = useSession();
+  const session = useRequireAuth();
   const [sort, setSort] = useState<E_sort>("asc" as E_sort);
   const [search, setSearch] = useState("");
   const debouncedValue = useDebounce<string>(search, 500);
@@ -81,18 +83,12 @@ const DataSample = () => {
   return hydrated ? (
     <Box paddingX={"30px"} className="bg-primary">
       <Box display={"flex"} paddingY={"30px"} gap={"10px"}>
-        <Card w={"50%"}>
-          <CardBody>
-            <Box><DashboardPieChart/></Box>
-          </CardBody>
-        </Card>
-        <Card>
-          <CardBody>
-            <Text>
-              View a summary of all your customers over the last month.
-            </Text>
-          </CardBody>
-        </Card>
+        <Box display={"flex"} w={"50%"} justifyContent={"center"}>
+          <DashboardPieChart />
+        </Box>
+        <Box display={"flex"} w={"50%"} justifyContent={"center"}>
+          <DashboardBarChart />
+        </Box>
       </Box>
       <Box marginBottom={"20px"}>
         <Heading>Data Sample</Heading>

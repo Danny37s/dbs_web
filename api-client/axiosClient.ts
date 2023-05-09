@@ -1,7 +1,7 @@
 import axios from "axios";
 import { request } from "http";
 import Cookies from "js-cookie";
-import { getSession } from 'next-auth/react';
+import { getSession, signOut } from 'next-auth/react';
 const axiosClient = axios.create({
     baseURL:"http://localhost:4000",
     headers:{
@@ -14,7 +14,7 @@ axiosClient.interceptors.request.use(
     async (config) => {
       const session = await getSession();
       if(session){
-       config.headers.Authorization = 'Bearer ' + session.user.token
+       config.headers.Authorization = 'Bearer ' + session?.user.token
       }
       return config;
     },
@@ -35,6 +35,9 @@ axiosClient.interceptors.request.use(
       let errorMessage
       // Do something with response error
       if(error.response){
+        if(error.response.status === 401){
+          signOut()
+        }
         errorMessage = error.response.data
       }else{
         errorMessage = error;

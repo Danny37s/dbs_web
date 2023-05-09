@@ -10,3 +10,13 @@ export interface I_DataSampleItem {
   date:Date
   predict_result: number[];
 }
+
+export type T_Analysis = {
+  name:string;
+  data:number
+}
+
+export interface DataSampleItemAnalysis{
+  status:T_Analysis[];
+  predict: Map<string, number>;
+}

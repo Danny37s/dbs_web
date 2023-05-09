@@ -1,51 +1,38 @@
 import { Card, Title, DonutChart } from "@tremor/react";
-import "@/styles/globals.css"
-const cities = [
-  {
-    name: "New York",
-    sales: 9800,
-  },
-  {
-    name: "London",
-    sales: 4567,
-  },
-  {
-    name: "Hong Kong",
-    sales: 3908,
-  },
-  {
-    name: "San Francisco",
-    sales: 2400,
-  },
-  {
-    name: "Singapore",
-    sales: 1908,
-  },
-  {
-    name: "Zurich",
-    sales: 1398,
-  },
-];
-
-const valueFormatter = (number: number) =>
-  `$ ${Intl.NumberFormat("us").format(number).toString()}`;
-
+import "@/styles/globals.css";
+import { useQuery } from "react-query";
+import { dataSampleApi } from "@/api-client";
+import { useEffect } from "react";
+import { Legend } from "@tremor/react";
 
 const DashboardPieChart = () => {
-  return (
-    <Card className="max-w-lg">
-    <Title>Sales</Title>
-    <DonutChart
-      className="mt-6"
-      data={cities}
-      category="sales"
-      index="name"
-      variant="pie"
-      valueFormatter={valueFormatter}
-      colors={["slate", "violet", "indigo", "rose", "cyan", "amber"]}
-    />
-  </Card>
-  )
-}
+  const { data } = useQuery({
+    queryKey: "dashboardChart",
+    queryFn: () => dataSampleApi.getDataForChart(),
+  });
 
-export default DashboardPieChart
+  return (
+    <Card>
+      <Title>Status</Title>
+      {!!data && (
+        <>
+          <DonutChart
+            className="mt-6"
+            data={data.status}
+            category="data"
+            index="name"
+            variant="pie"
+            colors={["blue", "gray"]}
+          />
+          <Legend
+            className="mt-3"
+            categories={data.status.map((data=>data.name))}
+            colors={["blue", "gray"]}
+          />
+        </>
+      )}
+    </Card>
+  );
+};
+
+export default DashboardPieChart;

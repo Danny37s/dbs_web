@@ -62,6 +62,7 @@ const DataItem = ({ params }: { params: { id: string } }) => {
             router.back();
           }}
           colorScheme="blue"
+          backgroundColor={"blue.500"}
         >
           <BiArrowBack></BiArrowBack>
         </Button>
@@ -77,7 +78,6 @@ const DataItem = ({ params }: { params: { id: string } }) => {
                 <Th textAlign={"center"}>angle_id</Th>
                 <Th>date</Th>
                 <Th textAlign={"center"}>status</Th>
-                <Th>Chart</Th>
               </Tr>
             </Thead>
             <Tbody>
@@ -90,7 +90,7 @@ const DataItem = ({ params }: { params: { id: string } }) => {
                     {format(new Date(item.date), "dd MMMM yyyy HH:mm:ss")}
                   </Td>
                   <Td textAlign={"center"}>{item.status}</Td>
-                  <Td>
+                  {/* <Td>
                     <Button
                       onClick={() => {
                         handleShowChart(item.predict_result);
@@ -98,7 +98,7 @@ const DataItem = ({ params }: { params: { id: string } }) => {
                     >
                       Show Chart
                     </Button>
-                  </Td>
+                  </Td> */}
                 </Tr>
               ))}
             </Tbody>
@@ -112,7 +112,7 @@ const DataItem = ({ params }: { params: { id: string } }) => {
         </Stack>
       )}
 
-      <Modal isOpen={isOpen} onClose={onClose}>
+      {/* <Modal isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />
         <ModalContent>
           <ModalHeader>Predict Result</ModalHeader>
@@ -127,7 +127,7 @@ const DataItem = ({ params }: { params: { id: string } }) => {
             </Button>
           </ModalFooter>
         </ModalContent>
-      </Modal>
+      </Modal> */}
     </Box>
   );
 };

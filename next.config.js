@@ -4,7 +4,7 @@ const nextConfig = {
     appDir: true,
     newNextLinkBehavior: false
   },
-  serverComponentsExternalPackages: ['@tremor/react'],
+  // serverComponentsExternalPackages: ['@tremor/react'],
 }
 
 module.exports = nextConfig
