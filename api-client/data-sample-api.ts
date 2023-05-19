@@ -36,5 +36,17 @@ export const dataSampleApi = {
       console.error(error);
       return null;
     }
+  },
+
+  async getDataFilterCard(){
+    const url = "/data-sample/data/analysis"
+    try{
+      const res = await axiosClient.get<{},{name:string,value:number}>(url);
+      return res
+    }
+    catch (error) {
+      console.error(error);
+      return null;
+    }  
   }
 };

@@ -49,7 +49,7 @@ const DataItem = ({ params }: { params: { id: string } }) => {
     onOpen();
   }
   return (
-    <Box paddingX={"30px"}>
+    <Box paddingX={"30px"} bg={"white"} minHeight={"100%"}>
       <Box
         marginBottom={"20px"}
         display={"flex"}
