@@ -47,15 +47,14 @@ const DataSample = () => {
   const debouncedValue = useDebounce<string>(search, 500);
   const [pageLimit, setPageLimit] = useState("10");
   const [pageIndex, setPageIndex] = useState("1");
-  const dateRange = useRecoilState(DateRangeState)
+  const [dateRange, setDateRange] = useRecoilState(DateRangeState);
   const { data, error, status } = useQuery({
-    queryKey: ["getDataSample", debouncedValue, sort, pageIndex, pageLimit],
+    queryKey: ["getDataSample", debouncedValue, sort, pageIndex, pageLimit, dateRange],
     queryFn: () =>
-      dataSampleApi.getListData(debouncedValue, sort, pageIndex, pageLimit),
+      dataSampleApi.getListData(debouncedValue, sort, pageIndex, pageLimit, dateRange),
     keepPreviousData: true,
   });
   const [hydrated, setHydrated] = React.useState(false);
-console.log(dateRange)
   React.useEffect(() => {
     setHydrated(true);
   }, []);
@@ -94,17 +93,6 @@ console.log(dateRange)
           <DashboardBarChart />
         </GridItem>
       </Grid>
-      {/* <Box display={"grid"} paddingY={"30px"} gap={"10px"}>
-        <Box w={"50%"} justifyContent={"center"}>
-          <DashboardPieChart />
-        </Box>
-        <Box display={"flex"} w={"50%"} justifyContent={"center"}>
-          <DashboardBarChart />
-        </Box>
-        <Box display={"flex"} w={"50%"} justifyContent={"center"}>
-          <DashboardFilterCard />
-        </Box>
-      </Box> */}
       <Box marginBottom={"20px"}>
         <Heading>Data Sample</Heading>
       </Box>
