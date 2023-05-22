@@ -95,7 +95,7 @@ export default function Navbar() {
                     })
                   }
                 >
-                  <Text fontSize={"sm"} fontWeight={400}>
+                  <Text fontSize={"sm"} className="text-black" fontWeight={400}>
                     Sign out
                   </Text>
                 </MenuItem>
