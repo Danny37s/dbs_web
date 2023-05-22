@@ -11,7 +11,7 @@ const DateRangePicker = () => {
   const [value, setValue] = useRecoilState(DateRangeState);
   return (
     <Box className="relative">
-      <Box className="p-1 absolute top-[1px] left-[56%] z-10 cursor-pointer" hidden={!value[0]} onClick={()=>{setValue([null])}}><SmallCloseIcon/></Box>
+      {/* <Box className="p-1 absolute top-[1px] left-[56%] z-10 cursor-pointer" hidden={!value[0]} onClick={()=>{setValue([null])}}><SmallCloseIcon/></Box> */}
       <DatePicker
         className=" min-w-[22rem] mx-auto"
         value={value}
